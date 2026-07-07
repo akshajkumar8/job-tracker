@@ -32,7 +32,10 @@ def get_job(job_id: int):
     for job in jobs:
         if job["id"] == job_id:
             return job
-    return {"error": "Job not found"}
+    raise HTTPException(
+        status_code=404,
+        detail="Job not found"
+    )
 
 
 # Creates a new job application
