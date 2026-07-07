@@ -26,6 +26,15 @@ def home():
 def get_jobs():
     return jobs
 
+# Returns a single job application by its ID
+@app.get("/jobs/{job_id}")
+def get_job(job_id: int):
+    for job in jobs:
+        if job["id"] == job_id:
+            return job
+    return {"error": "Job not found"}
+
+
 # Creates a new job application
 # Request data is validated against the Job schema before this function executes
 @app.post("/jobs")
