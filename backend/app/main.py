@@ -26,6 +26,24 @@ def home():
 def get_jobs():
     return jobs
 
+# Creates a new job application
+# Request data is validated before this function executes
+@app.post("/jobs")
+def create_job(job: JobCreate):
+    global next_job_id
+
+    new_job = {
+        "id": next_job_id,
+        "company": job.company,
+        "title": job.title,
+        "status": job.status
+    }
+
+    jobs.append(new_job)
+    next_job_id += 1
+
+    return new_job
+
 # Returns a single job application by its ID
 @app.get("/jobs/{job_id}")
 def get_job(job_id: int):
@@ -53,21 +71,14 @@ def update_job(job_id: int, updated_job: JobCreate):
         detail="Job not found"
     )
 
-
-# Creates a new job application
-# Request data is validated against the Job schema before this function executes
-@app.post("/jobs")
-def create_job(job: JobCreate):
-    global next_job_id
-
-    new_job = {
-        "id": next_job_id,
-        "company": job.company,
-        "title": job.title,
-        "status": job.status
-    }
-
-    jobs.append(new_job)
-    next_job_id += 1
-
-    return new_job
+# Deletes a job application by its ID
+@app.delete("/jobs/{job_id}")
+def delete_job(job_id: int):
+    for index, job in enumerate(jobs):
+        if job["id"] == job_id:
+            deleted_job = jobs.pop(index)
+            return deleted_job
+    raise HTTPException(
+        status_code=404,
+        detail="Job not found"
+    )
