@@ -93,7 +93,7 @@ def update_job(
     return job
 
 # Deletes a job application by its ID
-@app.delete("/jobs/{job_id}", response_model=JobResponse)
+@app.delete("/jobs/{job_id}", response_model=JobResponse, status_code=status.HTTP_200_OK)
 def delete_job(
     job_id: int,
     db: Session = Depends(get_db)
